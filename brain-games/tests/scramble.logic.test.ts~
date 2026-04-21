@@ -1,0 +1,32 @@
+import { shuffleWord, isCorrectGuess } from "./scramble.logic";
+
+describe("scramble logic", () => {
+  
+  test("shuffleWord returns same letters", () => {
+    const word = "apple";
+    const shuffled = shuffleWord(word);
+
+    expect(shuffled.split("").sort())
+      .toEqual(word.split("").sort());
+  });
+
+  test("shuffleWord preserves length", () => {
+    const word = "banana";
+    const shuffled = shuffleWord(word);
+
+    expect(shuffled.length).toBe(word.length);
+  });
+
+  test("isCorrectGuess works with exact match", () => {
+    expect(isCorrectGuess("apple", "apple")).toBe(true);
+  });
+
+  test("isCorrectGuess is case insensitive", () => {
+    expect(isCorrectGuess("Apple", "apple")).toBe(true);
+  });
+
+  test("isCorrectGuess fails on wrong input", () => {
+    expect(isCorrectGuess("apple", "appl")).toBe(false);
+  });
+
+});

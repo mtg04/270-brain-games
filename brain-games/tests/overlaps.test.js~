@@ -1,0 +1,31 @@
+const overlaps = require('./overlaps.js');
+
+test('overlapping ranges return true', () => {
+    expect(overlaps(1, 5, 4, 10)).toBe(true);
+});
+
+test('non-overlapping ranges return false', () => {
+    expect(overlaps(1, 3, 5, 8)).toBe(false);
+});
+
+test('one range inside another', () => {
+    expect(overlaps(2, 4, 1, 10)).toBe(true);
+});
+
+test('ranges touching at boundary overlap', () => {
+    expect(overlaps(1, 5, 5, 10)).toBe(true);
+});
+
+test('identical ranges overlap', () => {
+    expect(overlaps(3, 7, 3, 7)).toBe(true);
+});
+
+test('throws error when min1 > max1', () => {
+    expect(() => overlaps(5, 1, 2, 3)).toThrow(
+	'Invalid range: minimum is greater than maximum'
+    );
+});
+
+test('throws error when min2 > max2', () => {
+    expect(() => overlaps(1, 3, 6, 2)).toThrow();
+});
