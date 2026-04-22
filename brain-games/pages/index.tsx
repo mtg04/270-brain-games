@@ -23,20 +23,18 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Brain Games</h1>
-      <p className={styles.subtitle}>
-        Choose a game and test your brain
-      </p>
+      <p className={styles.subtitle}>Choose a game and test your brain</p>
 
-      <div className={styles.grid}>
+      <div className={styles.menu}>
         {games.map((game) => (
           <Link key={game.name} href={game.route}>
             <div className={styles.card}>
-              <h2 className={styles.cardTitle}>
-                {game.emoji} {game.name}
-              </h2>
-              <p className={styles.cardDesc}>
-                {game.description}
-              </p>
+              <div>
+                <div className={styles.cardTitle}>{game.name}</div>
+                <div className={styles.cardDesc}>{game.description}</div>
+              </div>
+
+              <div style={{ fontSize: "1.4rem" }}>→</div>
             </div>
           </Link>
         ))}
