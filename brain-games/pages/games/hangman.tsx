@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import  Sidebar  from "@/components/Sidebar";
 import { useLocalStorage } from "@/components/useLocalStorage";
+import styles from "@/styles/UI.module.css";
 import words from "an-array-of-english-words";
 
 const wordList: string[] = words;
@@ -131,7 +132,6 @@ export default function App() {
         alignItems: "center",
         background: "#0f172a",
         color: "#f1f5f9",
-        fontFamily: "sans-serif",
         padding: "2rem",
         width: "100%",
     };

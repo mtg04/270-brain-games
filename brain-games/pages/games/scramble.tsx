@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import { useLocalStorage } from "@/components/useLocalStorage";
+import styles from "@/styles/UI.module.css";
 
 /* ---------------- WORD BANK ---------------- */
 
@@ -348,7 +349,6 @@ export default function Scramble() {
             alignItems: "center",
             background: "#0f172a", // dark background
             color: "#f1f5f9",
-            fontFamily: "sans-serif",
           }}
         >
           <div
