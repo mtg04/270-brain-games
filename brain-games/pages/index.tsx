@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Link from "next/link";
 import styles from "@/styles/Home.module.css";
 
@@ -14,12 +15,17 @@ const games = [
   },
   {
     name: "Wordle",
-    description: "Guess the 5 letter word in 6 attempts.",
+    description: "Guess the 5 letter word in 6 attempts!",
     route: "/games/wordle",
   },
 ];
 
 export default function Home() {
+  const [revealed, setRevealed] = useState({
+    jay: false,
+    mikey: false,
+    audrey: false,
+  });
   return (
   <div className={styles.container}>
     <div className={styles.bulletin_board}>
