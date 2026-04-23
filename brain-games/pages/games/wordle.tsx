@@ -40,14 +40,14 @@ export default function WordleGame() {
       if (gameOver) return;
 
       if (e.key === "Enter") {
-        if (currentGuess.length !== WORD_LENGTH) return;
+        if (currentGuess.length !== wordLength) return;
 
         const newGuesses = [...guesses, currentGuess.toUpperCase()];
         setGuesses(newGuesses);
         setCurrentGuess("");
 
         const won = currentGuess.toUpperCase() === secretWord;
-        const finished = won || newGuesses.length === MAX_GUESSES;
+        const finished = won || newGuesses.length === maxGuesses;
 
         if (finished) {
           setGameOver(true);
@@ -66,7 +66,7 @@ export default function WordleGame() {
         return;
       }
 
-      if (/^[A-Za-z]$/.test(e.key) && currentGuess.length < WORD_LENGTH) {
+      if (/^[A-Za-z]$/.test(e.key) && currentGuess.length < wordLength) {
         setCurrentGuess((prev) => prev + e.key.toUpperCase());
       }
     },
@@ -121,13 +121,13 @@ export default function WordleGame() {
           <div
             style={{
               display: "grid",
-              gridTemplateRows: `repeat(${MAX_GUESSES}, 1fr)`,
+              gridTemplateRows: `repeat(${maxGuesses}, 1fr)`,
               gap: "5px",
               width: "275px",
               margin: "0 auto",
             }}
           >
-            {Array.from({ length: MAX_GUESSES }).map((_, rowIndex) => {
+            {Array.from({ length: maxGuesses }).map((_, rowIndex) => {
               const isGuessed = rowIndex < guesses.length;
               const isCurrent = rowIndex === guesses.length;
               const guessText = isGuessed
@@ -144,12 +144,12 @@ export default function WordleGame() {
                   key={rowIndex}
                   style={{
                     display: "grid",
-                    gridTemplateColumns: `repeat(${WORD_LENGTH}, 1fr)`,
+                    gridTemplateColumns: `repeat(${wordLength}, 1fr)`,
                     gap: "5px",
                     margin: "0 auto",
                   }}
                 >
-                  {Array.from({ length: WORD_LENGTH }).map((_, colIndex) => {
+                  {Array.from({ length: wordLength }).map((_, colIndex) => {
                     const char = guessText[colIndex] || "";
                     const status = statuses[colIndex];
 
