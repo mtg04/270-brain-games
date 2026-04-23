@@ -1,6 +1,6 @@
 .sidebar {
   width: 220px;
-  height: 100vh;
+  min-height: 100vh;
   background-color: #4e2a1b;
   color: #f1f5f9;
   padding: 1rem;
@@ -19,7 +19,7 @@
   margin-bottom: 1rem;
   font-size: 1.2rem;
   padding-bottom: 1rem;
-  border-bottom: 5px solid #2a1408; 
+  border-bottom: 5px solid #2a1408;
 }
 
 .link {

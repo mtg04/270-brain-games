@@ -109,7 +109,6 @@ const WORDS = {
   ],
 
   hard: [
-    // longer 6–7+ mixed (harder due to structure)
     "complex",
     "dynamic",
     "program",
@@ -128,8 +127,6 @@ const WORDS = {
     "process",
     "thread",
     "library",
-
-    // longer / trickier
     "function",
     "variable",
     "constant",
@@ -323,7 +320,7 @@ export default function Scramble() {
           streak: newStreak,
           bestStreak: Math.max(prev.bestStreak, newStreak),
         };
-    });
+      });
 
       setTimeout(() => newRound(), 700);
     }
@@ -349,213 +346,213 @@ export default function Scramble() {
 
   return (
     <Layout>
-      <div style={{ padding: "2rem", textAlign: "center" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "flex-start",
+          width: "100%",
+          paddingTop: "2rem",
+        }}
+      >
         <div
           style={{
-            minHeight: "100vh",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            background: "#0f172a", // dark background
+            background: "#4e2a1b",
+            border: "5px solid #2a1408",
+            padding: "1.5rem",
+            width: "420px",
+            textAlign: "center",
             color: "#f1f5f9",
+            imageRendering: "pixelated",
+            boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
           }}
         >
-          <div
+          <h1 style={{ fontSize: "2rem", marginBottom: "1rem" }}>
+            Word Scramble
+          </h1>
+
+          {/* Stats */}
+          <div style={{ marginBottom: "1rem" }} suppressHydrationWarning>
+            <div>
+              Wins: <strong suppressHydrationWarning>{stats.wins}</strong>
+            </div>
+            <div>
+              Losses: <strong suppressHydrationWarning>{stats.losses}</strong>
+            </div>
+            <div>
+              Games Played:{" "}
+              <strong suppressHydrationWarning>{stats.gamesPlayed}</strong>
+            </div>
+            <div>
+              Streak: <strong suppressHydrationWarning>{stats.streak}</strong>
+            </div>
+            <div>
+              Best: <strong suppressHydrationWarning>{stats.bestStreak}</strong>
+            </div>
+          </div>
+
+          {/* Mode Selector */}
+          <div style={{ marginBottom: "1rem" }}>
+            <label>Mode: </label>
+            <select
+              value={mode}
+              onChange={(e) => {
+                const newMode = e.target.value as Mode;
+                setMode(newMode);
+
+                setTimeout(() => {
+                  newRound(difficulty);
+                }, 0);
+              }}
+              style={{
+                padding: "0.4rem",
+                borderRadius: "6px",
+                marginLeft: "0.5rem",
+              }}
+            >
+              <option value="normal">Normal</option>
+              <option value="timed">Timed (30s)</option>
+            </select>
+          </div>
+
+          {/* Difficulty */}
+          <div style={{ marginBottom: "1rem" }}>
+            <label>Difficulty: </label>
+            <select
+              value={difficulty}
+              onChange={(e) => {
+                const level = e.target.value as Difficulty;
+                setDifficulty(level);
+                newRound(level);
+              }}
+              style={{
+                padding: "0.4rem",
+                borderRadius: "6px",
+                marginLeft: "0.5rem",
+              }}
+            >
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+          </div>
+
+          {/* Timer */}
+          {mode === "timed" && <h3> {timeLeft}s</h3>}
+
+          {/* Word */}
+          <h2
             style={{
-              background: "#1e293b",
-              padding: "2rem",
-              borderRadius: "16px",
-              width: "400px",
-              textAlign: "center",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
+              letterSpacing: "8px",
+              fontSize: "2rem",
+              margin: "1.5rem 0",
+              background: "#3f2316",
+              padding: "1rem",
+              borderRadius: "10px",
             }}
           >
-            <h1 style={{ fontSize: "2rem", marginBottom: "1rem" }}>
-              Word Scramble
-            </h1>
+            {scrambled.toUpperCase()}
+          </h2>
 
-            {/* Stats */}
-            <div style={{ marginBottom: "1rem" }} suppressHydrationWarning>
-              <div>
-                Wins: <strong suppressHydrationWarning>{stats.wins}</strong>
-              </div>
-              <div>
-                Losses: <strong suppressHydrationWarning>{stats.losses}</strong>
-              </div>
-              <div>
-                Games Played: <strong suppressHydrationWarning  >{stats.gamesPlayed}</strong>
-              </div>
-              <div>
-                Streak: <strong suppressHydrationWarning>{stats.streak}</strong>
-              </div>
-              <div>
-                Best: <strong suppressHydrationWarning >{stats.bestStreak}</strong>
-              </div>
-            </div>
-
-            {/* Mode Selector */}
-            <div style={{ marginBottom: "1rem" }}>
-              <label>Mode: </label>
-              <select
-                value={mode}
-                onChange={(e) => {
-                  const newMode = e.target.value as Mode;
-                  setMode(newMode);
-
-                  setTimeout(() => {
-                    newRound(difficulty);
-                  }, 0);
-                }}
+          <h2
+            style={{
+              letterSpacing: "8px",
+              fontSize: "1.8rem",
+              margin: "1rem 0",
+            }}
+          >
+            {word.split("").map((letter, i) => (
+              <span
+                key={i}
                 style={{
-                  padding: "0.4rem",
-                  borderRadius: "6px",
-                  marginLeft: "0.5rem",
+                  display: "inline-block",
+                  width: "28px",
+                  borderBottom: "2px solid white",
+                  margin: "0 4px",
+                  textAlign: "center",
                 }}
               >
-                <option value="normal">Normal</option>
-                <option value="timed">Timed (30s)</option>
-              </select>
-            </div>
+                {revealed[i] ? letter.toUpperCase() : "_"}
+              </span>
+            ))}
+          </h2>
 
-            {/* Difficulty */}
-            <div style={{ marginBottom: "1rem" }}>
-              <label>Difficulty: </label>
-              <select
-                value={difficulty}
-                onChange={(e) => {
-                  const level = e.target.value as Difficulty;
-                  setDifficulty(level);
-                  newRound(level);
-                }}
-                style={{
-                  padding: "0.4rem",
-                  borderRadius: "6px",
-                  marginLeft: "0.5rem",
-                }}
-              >
-                <option value="easy">Easy</option>
-                <option value="medium">Medium</option>
-                <option value="hard">Hard</option>
-              </select>
-            </div>
+          {/* Input */}
+          <input
+            value={guess}
+            onChange={(e) => setGuess(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+            placeholder="Enter your guess"
+            style={{
+              padding: "0.6rem",
+              width: "80%",
+              borderRadius: "8px",
+              border: "none",
+              outline: "none",
+              textAlign: "center",
+              fontSize: "1rem",
+            }}
+          />
 
-            {/* Timer */}
-            {mode === "timed" && <h3> {timeLeft}s</h3>}
-
-            {/* Word */}
-            <h2
+          <div style={{ marginTop: "1rem" }}>
+            <button
+              onClick={handleSubmit}
               style={{
-                letterSpacing: "8px",
-                fontSize: "2rem",
-                margin: "1.5rem 0",
-                background: "#0f172a",
-                padding: "1rem",
-                borderRadius: "10px",
-              }}
-            >
-              {scrambled.toUpperCase()}
-            </h2>
-
-            <h2
-              style={{
-                letterSpacing: "8px",
-                fontSize: "1.8rem",
-                margin: "1rem 0",
-              }}
-            >
-              {word.split("").map((letter, i) => (
-                <span
-                  key={i}
-                  style={{
-                    display: "inline-block",
-                    width: "28px",
-                    borderBottom: "2px solid white",
-                    margin: "0 4px",
-                    textAlign: "center",
-                  }}
-                >
-                  {revealed[i] ? letter.toUpperCase() : "_"}
-                </span>
-              ))}
-            </h2>
-
-            {/* Input */}
-            <input
-              value={guess}
-              onChange={(e) => setGuess(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-              placeholder="Enter your guess"
-              style={{
-                padding: "0.6rem",
-                width: "80%",
+                padding: "0.6rem 1.2rem",
+                marginRight: "0.5rem",
                 borderRadius: "8px",
                 border: "none",
-                outline: "none",
-                textAlign: "center",
-                fontSize: "1rem",
-              }}
-            />
-
-            <div style={{ marginTop: "1rem" }}>
-              <button
-                onClick={handleSubmit}
-                style={{
-                  padding: "0.6rem 1.2rem",
-                  marginRight: "0.5rem",
-                  borderRadius: "8px",
-                  border: "none",
-                  background: "#22c55e",
-                  color: "white",
-                  cursor: "pointer",
-                }}
-              >
-                Submit
-              </button>
-
-              <button
-                onClick={resetGame}
-                style={{
-                  padding: "0.6rem 1.2rem",
-                  borderRadius: "8px",
-                  border: "none",
-                  background: "#ef4444",
-                  color: "white",
-                  cursor: "pointer",
-                }}
-              >
-                Reset
-              </button>
-
-              <button
-                onClick={giveHint}
-                style={{
-                  padding: "0.6rem 1.2rem",
-                  borderRadius: "8px",
-                  border: "none",
-                  background: "#3b82f6",
-                  color: "white",
-                  cursor: "pointer",
-                  marginLeft: "0.5rem",
-                }}
-              >
-                Hint!
-              </button>
-            </div>
-
-            <p
-              style={{
-                marginTop: "1rem",
-                fontWeight: "bold",
-                color: message.includes("Correct")
-                  ? "#22c55e"
-                  : message.includes("Time")
-                    ? "#f59e0b"
-                    : "#ef4444",
+                background: "#22c55e",
+                color: "white",
+                cursor: "pointer",
               }}
             >
-              {message}
-            </p>
+              Submit
+            </button>
+
+            <button
+              onClick={resetGame}
+              style={{
+                padding: "0.6rem 1.2rem",
+                borderRadius: "8px",
+                border: "none",
+                background: "#ef4444",
+                color: "white",
+                cursor: "pointer",
+              }}
+            >
+              Reset
+            </button>
+
+            <button
+              onClick={giveHint}
+              style={{
+                padding: "0.6rem 1.2rem",
+                borderRadius: "8px",
+                border: "none",
+                background: "#3b82f6",
+                color: "white",
+                cursor: "pointer",
+                marginLeft: "0.5rem",
+              }}
+            >
+              Hint!
+            </button>
           </div>
+
+          <p
+            style={{
+              marginTop: "1rem",
+              fontWeight: "bold",
+              color: message.includes("Correct")
+                ? "#22c55e"
+                : message.includes("Time")
+                  ? "#f59e0b"
+                  : "#ef4444",
+            }}
+          >
+            {message}
+          </p>
         </div>
       </div>
     </Layout>

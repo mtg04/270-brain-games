@@ -96,13 +96,13 @@ export default function WordleGame() {
           flexDirection: "column",
           minHeight: "100vh",
           paddingTop: "50px",
-          background: "#0f172a",
+          background: "transparent",
           color: "#f1f5f9",
         }}
       >
         <div
           style={{
-            background: "#1e293b",
+            background: "#3f2316",
             padding: "2rem",
             borderRadius: "16px",
             boxShadow: "0 10px 30px rgba(0,0,0,0.4)",

@@ -11,7 +11,7 @@
 
 .container {
   min-height: 100vh;
-  background: #0f172a;
+  background: "transparent";
   color: #f1f5f9;
   display: flex;
   flex-direction: column;
@@ -25,10 +25,11 @@
 .title {
   font-size: 2.5rem;
   margin-bottom: 0.5rem;
+  color: #000;
 }
 
 .subtitle {
-  color: #94a3b8;
+  color: #000;
   margin-bottom: 2rem;
 }
 
@@ -41,9 +42,10 @@
 }
 
 .card {
-  background: #1e293b;
+  background: #4e2a1b;
   padding: 1.2rem 1.5rem;
   border-radius: 14px;
+  border: "5px solid #2a1408";
   cursor: pointer;
   transition: all 0.25s ease;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);

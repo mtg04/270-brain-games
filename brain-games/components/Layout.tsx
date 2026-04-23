@@ -3,7 +3,9 @@ import React from "react";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#0f172a" }}>
+    <div
+      style={{ display: "flex", minHeight: "100vh", background: "transparent" }}
+    >
       <Sidebar />
 
       <main
@@ -12,7 +14,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           padding: "2rem",
           display: "flex",
           justifyContent: "center",
-          width: "100%",
+          alignItems: "flex-start",
+          minWidth: 0,
         }}
       >
         {children}
