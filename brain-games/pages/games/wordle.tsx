@@ -63,8 +63,7 @@ const getLetterStatuses = () => {
 };
 
 const letterStatuses = getLetterStatuses();
-const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-
+const alphabet = "QWERTYUIOPASDFGHJKLZXCVBNM".split("");
 
 const PIXEL_FONT = "'Press Start 2P', system-ui";
 
@@ -143,9 +142,9 @@ return (
           <h2 style={{ 
             marginTop: '20px', 
             fontSize: '1rem',
-            color: guesses[guesses.length - 1] === secretWord ? "#22c55e" : "#ef4444" 
+            color: guesses[guesses.length - 1] === secretWord ? "#22c55e" : "#ef4444", whiteSpace: 'pre-line', lineHeight: '1.8'
           }}>
-            {guesses[guesses.length - 1] === secretWord ? "Correct!!" : `It was ${secretWord}`}
+            {guesses[guesses.length - 1] === secretWord ? "Correct!!" : `Incorrect :(\nIt was ${secretWord}`}
           </h2>
         )}
         
