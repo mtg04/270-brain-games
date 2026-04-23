@@ -21,24 +21,48 @@ const games = [
 
 export default function Home() {
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Brain Games</h1>
-      <p className={styles.subtitle}>Choose a game and test your brain</p>
+  <div className={styles.container}>
+    <div className={styles.bulletin_board}>
+      <h1 className={styles.title}>Bouchard&apos;s Brain Games</h1>
+      <p className={styles.subtitle}>Choose a game and test your brain!</p>
 
       <div className={styles.menu}>
-        {games.map((game) => (
-          <Link key={game.name} href={game.route}>
-            <div className={styles.card}>
-              <div>
-                <div className={styles.cardTitle}>{game.name}</div>
-                <div className={styles.cardDesc}>{game.description}</div>
-              </div>
+        <div className={`${styles.note} ${styles.note1}`}>Jay Bea</div>
+        <div className={`${styles.note} ${styles.note2}`}>Mikey Goad</div>
+        <div className={`${styles.note} ${styles.note3}`}>Audrey Street</div>
+        <div className={`${styles.note} ${styles.note4}`}>More games soon!</div>
 
-              <div style={{ fontSize: "1.4rem" }}>→</div>
+        <Link href="/games/scramble">
+          <div className={`${styles.card} ${styles.game1}`}>
+            <div>
+              <div className={styles.cardTitle}>Word Scramble</div>
+              <div className={styles.cardDesc}>Unscramble the letters!</div>
             </div>
-          </Link>
-        ))}
+            <div className={styles.arrow}>→</div>
+          </div>
+        </Link>
+
+        <Link href="/games/hangman">
+          <div className={`${styles.card} ${styles.game2}`}>
+            <div>
+              <div className={styles.cardTitle}>Hangman</div>
+              <div className={styles.cardDesc}>Guess the word to save the man!</div>
+            </div>
+            <div className={styles.arrow}>→</div>
+          </div>
+        </Link>
+
+        <Link href="/games/wordle">
+          <div className={`${styles.card} ${styles.game3}`}>
+            <div>
+              <div className={styles.cardTitle}>Wordle</div>
+              <div className={styles.cardDesc}>Guess the 5 letter word in 6 attempts.</div>
+            </div>
+            <div className={styles.arrow}>→</div>
+          </div>
+        </Link>
       </div>
     </div>
-  );
+  </div>
+);
 }

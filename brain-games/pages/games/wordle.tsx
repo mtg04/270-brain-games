@@ -1,9 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { checkWordleGuess, getRandomWord } from '../../wordle.logic';
-import Sidebar from "@/components/Sidebar"; 
+import React, { useState, useEffect, useCallback } from "react";
+import { checkWordleGuess, getRandomWord } from "../../wordle.logic";
+import Layout from "@/components/Layout";
+import { useLocalStorage } from "@/components/useLocalStorage";
 
 const wordLength = 5;
 const maxGuesses = 6;
+
+type WordleStats = {
+  wins: number;
+  losses: number;
+  gamesPlayed: number;
+};
 
 export default function WordleGame() {
   const [secretWord, setSecretWord] = useState("");
@@ -11,202 +18,199 @@ export default function WordleGame() {
   const [currentGuess, setCurrentGuess] = useState("");
   const [gameOver, setGameOver] = useState(false);
 
-  const handleKeyUp = (e: KeyboardEvent) => {
-    if (gameOver) return;
-    if (e.key === 'Enter') {
-      if (currentGuess.length !== wordLength) return;
-      const newGuesses = [...guesses, currentGuess.toUpperCase()];
-      setGuesses(newGuesses);
-      setCurrentGuess("");
-      if (currentGuess.toUpperCase() === secretWord || newGuesses.length === maxGuesses) {
-        setGameOver(true);
-      }}
-    if (e.key === 'Backspace') {
-      setCurrentGuess(prev => prev.slice(0, -1));
-      return;
-    }
-    if (/^[A-Za-z]$/.test(e.key) && currentGuess.length < wordLength) {
-      setCurrentGuess(prev => prev + e.key.toUpperCase());
-    }
+  const [stats, setStats] = useLocalStorage<WordleStats>("wordleStats", {
+    wins: 0,
+    losses: 0,
+    gamesPlayed: 0,
+  });
+
+  const newGame = () => {
+    const word = getRandomWord();
+
+    setSecretWord(word);
+    setGuesses([]);
+    setCurrentGuess("");
+    setGameOver(false);
+
+    console.log("New word:", word);
   };
 
-useEffect(() => {
+  const handleKeyUp = useCallback(
+    (e: KeyboardEvent) => {
+      if (gameOver) return;
+
+      if (e.key === "Enter") {
+        if (currentGuess.length !== WORD_LENGTH) return;
+
+        const newGuesses = [...guesses, currentGuess.toUpperCase()];
+        setGuesses(newGuesses);
+        setCurrentGuess("");
+
+        const won = currentGuess.toUpperCase() === secretWord;
+        const finished = won || newGuesses.length === MAX_GUESSES;
+
+        if (finished) {
+          setGameOver(true);
+
+          setStats((prev) => ({
+            ...prev,
+            wins: prev.wins + (won ? 1 : 0),
+            losses: prev.losses + (won ? 0 : 1),
+            gamesPlayed: prev.gamesPlayed + 1,
+          }));
+        }
+      }
+
+      if (e.key === "Backspace") {
+        setCurrentGuess((prev) => prev.slice(0, -1));
+        return;
+      }
+
+      if (/^[A-Za-z]$/.test(e.key) && currentGuess.length < WORD_LENGTH) {
+        setCurrentGuess((prev) => prev + e.key.toUpperCase());
+      }
+    },
+    [currentGuess, guesses, gameOver, secretWord, setStats],
+  );
+
+  useEffect(() => {
     const word = getRandomWord();
     setSecretWord(word);
   }, []);
 
   useEffect(() => {
     if (!secretWord) return;
-    window.addEventListener('keyup', handleKeyUp);
-    return () => { window.removeEventListener('keyup', handleKeyUp); };
-  }, [currentGuess, guesses, gameOver, secretWord]);
+    window.addEventListener("keyup", handleKeyUp);
+    return () => {
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [handleKeyUp, secretWord]);
 
-const getLetterStatuses = () => {
-  const statuses: { [key: string]: string } = {};
+  return (
+    <Layout>
+      <div
+        tabIndex={0}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "100vh",
+          paddingTop: "50px",
+          background: "transparent",
+          color: "#f1f5f9",
+        }}
+      >
+        <div
+          style={{
+            background: "#3f2316",
+            padding: "2rem",
+            borderRadius: "16px",
+            boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
+            textAlign: "center",
+            width: "320px",
+            margin: "0 auto",
+          }}
+        >
+          <h1>Wordle</h1>
 
-  guesses.forEach((word) => {
-    const result = checkWordleGuess(word, secretWord);
-    word.split("").forEach((char, i) => {
-      const currentStatus = result[i];
-      // Logic: 'correct' overrides 'present', which overrides 'absent'
-      if (currentStatus === "correct") {
-        statuses[char] = "correct";
-      } else if (currentStatus === "present" && statuses[char] !== "correct") {
-        statuses[char] = "present";
-      } else if (currentStatus === "absent" && !statuses[char]) {
-        statuses[char] = "absent";
-      }
-    });
-  });
+          <div style={{ marginBottom: "1rem" }}>
+            <p>Wins: {stats.wins}</p>
+            <p>Losses: {stats.losses}</p>
+            <p>Games: {stats.gamesPlayed}</p>
+          </div>
 
-  return statuses;
-};
+          <div
+            style={{
+              display: "grid",
+              gridTemplateRows: `repeat(${MAX_GUESSES}, 1fr)`,
+              gap: "5px",
+              width: "275px",
+              margin: "0 auto",
+            }}
+          >
+            {Array.from({ length: MAX_GUESSES }).map((_, rowIndex) => {
+              const isGuessed = rowIndex < guesses.length;
+              const isCurrent = rowIndex === guesses.length;
+              const guessText = isGuessed
+                ? guesses[rowIndex]
+                : isCurrent
+                  ? currentGuess
+                  : "";
+              const statuses = isGuessed
+                ? checkWordleGuess(guessText, secretWord)
+                : [];
 
-const letterStatuses = getLetterStatuses();
-const alphabet = "QWERTYUIOPASDFGHJKLZXCVBNM".split("");
+              return (
+                <div
+                  key={rowIndex}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: `repeat(${WORD_LENGTH}, 1fr)`,
+                    gap: "5px",
+                    margin: "0 auto",
+                  }}
+                >
+                  {Array.from({ length: WORD_LENGTH }).map((_, colIndex) => {
+                    const char = guessText[colIndex] || "";
+                    const status = statuses[colIndex];
 
-const PIXEL_FONT = "'Press Start 2P', system-ui";
+                    let bgColor = "#fff";
+                    let textColor = "#000";
+                    if (status === "correct") bgColor = "#6aaa64";
+                    if (status === "present") bgColor = "#c9b458";
+                    if (status === "absent") bgColor = "#787c7e";
+                    if (isGuessed) textColor = "#fff";
 
-return (
-  <div style={{ display: "flex", minHeight: "100vh", background: "#0f172a" }}>
-    
-    <Sidebar />
+                    return (
+                      <div
+                        key={colIndex}
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          border: "2px solid #ccc",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "stretch",
+                          fontSize: "24px",
+                          fontWeight: "bold",
+                          backgroundColor: bgColor,
+                          color: textColor,
+                        }}
+                      >
+                        {char}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
 
-    <div style={{ 
-      flex: 1, 
-      display: "flex", 
-      justifyContent: "center", 
-      alignItems: "center", 
-      color: "#f1f5f9",
-      fontFamily: PIXEL_FONT, 
-      padding: "2rem"
-    }}>
-      
-      <div style={{ 
-        background: "#1e293b",
-        padding: "2rem",
-        borderRadius: "16px",
-        width: "450px", 
-        textAlign: "center",
-        boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
-        display: 'flex', 
-        flexDirection: 'column', 
-        alignItems: 'center' 
-      }}>
-        
-        {}
-        <h1 style={{ 
-          fontSize: "2rem", 
-          marginBottom: "1.5rem", 
-        }}>
-          Wordle
-        </h1>
-        
-        <div style={{ display: 'grid', gridTemplateRows: `repeat(${maxGuesses}, 1fr)`, gap: '8px' }}>
-          {Array.from({ length: maxGuesses }).map((_, rowIndex) => {
-            const isGuessed = rowIndex < guesses.length;
-            const isCurrent = rowIndex === guesses.length;
-            const guessText = isGuessed ? guesses[rowIndex] : isCurrent ? currentGuess : "";
-            const statuses = isGuessed ? checkWordleGuess(guessText, secretWord) : [];
+          {gameOver && (
+            <>
+              <h2 style={{ marginTop: "20px" }}>
+                {guesses[guesses.length - 1] === secretWord
+                  ? "You won!"
+                  : `Loser. It was ${secretWord}`}
+              </h2>
 
-            return (
-              <div key={rowIndex} style={{ display: 'grid', gridTemplateColumns: `repeat(${wordLength}, 1fr)`, gap: '8px' }}>
-                {Array.from({ length: wordLength }).map((_, colIndex) => {
-                  const char = guessText[colIndex] || "";
-                  const status = statuses[colIndex];
-                  
-                  let bgColor = '#0f172a'; 
-                  let borderColor = '#334155';
-                  let textColor = '#fff';
-
-                  if (status === 'correct') { bgColor = '#22c55e'; borderColor = '#22c55e'; }
-                  else if (status === 'present') { bgColor = '#eab308'; borderColor = '#eab308'; }
-                  else if (status === 'absent') { bgColor = '#475569'; borderColor = '#475569'; }
-                  else if (char && isCurrent) { borderColor = '#64748b'; }
-
-                  return (
-                    <div key={colIndex} style={{
-                      width: '60px', height: '60px', border: `2px solid ${borderColor}`, borderRadius: '4px', display: 'flex', 
-                      justifyContent: 'center', alignItems: 'center', fontSize: '20px', backgroundColor: bgColor, color: textColor
-                    }}>
-                      {char}
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })}
+              <button
+                onClick={newGame}
+                style={{
+                  marginTop: "15px",
+                  padding: "0.6rem 1.2rem",
+                  borderRadius: "8px",
+                  border: "none",
+                  background: "#3b82f6",
+                  color: "white",
+                  cursor: "pointer",
+                }}
+              >
+                New Game
+              </button>
+            </>
+          )}
         </div>
-
-        {gameOver && (
-          <h2 style={{ 
-            marginTop: '20px', 
-            fontSize: '1rem',
-            color: guesses[guesses.length - 1] === secretWord ? "#22c55e" : "#ef4444", whiteSpace: 'pre-line', lineHeight: '1.8'
-          }}>
-            {guesses[guesses.length - 1] === secretWord ? "Correct!!" : `Incorrect :(\nIt was ${secretWord}`}
-          </h2>
-        )}
-        
-        <div style={{ 
-    display: 'flex', 
-    flexWrap: 'wrap', 
-    justifyContent: 'center', 
-    gap: '6px', 
-    marginTop: '20px',
-    maxWidth: '350px' 
-  }}>
-  {alphabet.map((letter) => {
-    const status = letterStatuses[letter];
-    
-    let bgColor = '#334155'; 
-    let opacity = 1;
-
-    if (status === 'correct') bgColor = '#22c55e';
-    else if (status === 'present') bgColor = '#eab308';
-    else if (status === 'absent') {
-      bgColor = '#0f172a';
-      opacity = 0.5;
-    }
-
-    return (
-      <div key={letter} style={{
-        width: '30px',
-        height: '40px',
-        background: bgColor,
-        color: '#fff',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: '4px',
-        fontSize: '0.5rem',
-        fontFamily: PIXEL_FONT,
-        opacity: opacity,
-        transition: 'all 0.3s ease'
-      }}>
-        {letter}
       </div>
-    );
-  })}
-</div>
-
-        <button 
-          onClick={() => window.location.reload()} 
-          style={{ 
-            marginTop: '2rem',
-            padding: '0.8rem 1.2rem', 
-            borderRadius: '8px', 
-            border: 'none', 
-            background: '#3b82f6', 
-            color: 'white', 
-            cursor: 'pointer',
-            fontFamily: PIXEL_FONT,
-            fontSize: '0.7rem' 
-          }}>
-          New Game
-        </button>
-      </div>
-    </div>
-  </div>
-); 
+    </Layout>
+  );
 }

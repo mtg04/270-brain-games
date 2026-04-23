@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
 
 :root {
   --background: #ffffff;
@@ -14,14 +14,18 @@
 
 html,
 body {
-  max-width: 100vw;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
   overflow-x: hidden;
 }
 
 body {
   color: var(--foreground);
-  background: var(--background);
-  font-family: 'Press Start 2P';
+  background-color: #d8d2c8;
+  background-image: url("/UI/Backgrounds/cinderblock_tile.png");
+  font-family: "Press Start 2P";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -39,7 +43,7 @@ select {
   font: inherit;
 }
 
-img{
+img {
   image-rendering: pixelated;
 }
 
@@ -50,6 +54,12 @@ img{
 a {
   color: inherit;
   text-decoration: none;
+}
+
+#__next {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 @media (prefers-color-scheme: dark) {

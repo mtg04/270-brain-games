@@ -1,0 +1,37 @@
+.hangmanPage {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
+  background-color: #d8d2c8;
+  background-image: url("/UI/Backgrounds/cinderblock_tile.png");
+  background-repeat: repeat;
+  background-size: 160px 160px;
+}
+
+.scramblePage {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #3f2316;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.chalkboardCard {
+  width: 70vw;
+  max-width: 900px;
+  min-height: 500px;
+  padding: 2rem;
+
+  border: 8px solid;
+
+  border-image-source: url("/UI/Frames/chalkboard.png");
+  border-image-slice: 2 fill;
+  border-image-repeat: stretch;
+
+  color: #f5f5f5;
+  text-align: center;
+}
