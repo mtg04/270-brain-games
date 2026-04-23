@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Layout from "@/components/Layout";
+import { useLocalStorage } from "@/components/useLocalStorage";
 
 /* ---------------- WORD BANK ---------------- */
 
@@ -287,13 +288,13 @@ export default function Scramble() {
     } else {
       setMessage("Wrong!");
       setStats((prev) => ({
-      ...prev,
-      losses: prev.losses + 1,
-      gamesPlayed: prev.gamesPlayed + 1,
-      streak: 0,
-    }));
-  }
-};
+        ...prev,
+        losses: prev.losses + 1,
+        gamesPlayed: prev.gamesPlayed + 1,
+        streak: 0,
+      }));
+    }
+  };
 
   const giveHint = () => {
     const hiddenIndexes = revealed
@@ -322,12 +323,12 @@ export default function Scramble() {
 
   const resetGame = () => {
     setStats({
-    wins: 0,
-    losses: 0,
-    gamesPlayed: 0,
-    streak: 0,
-    bestStreak: 0,
-  });
+      wins: 0,
+      losses: 0,
+      gamesPlayed: 0,
+      streak: 0,
+      bestStreak: 0,
+    });
 
     setGuess("");
     setMessage("");
@@ -350,59 +351,7 @@ export default function Scramble() {
             fontFamily: "sans-serif",
           }}
         >
-<<<<<<< HEAD
           <div
-=======
-          ← Back to Home
-        </button>
-        <h1 style={{ fontSize: "2rem", marginBottom: "1rem" }}>
-          Word Scramble
-        </h1>
-
-        {/* Stats */}
-        <div style={{ marginBottom: "1rem" }}>
-          <div>Wins: <strong>{stats.wins}</strong></div>
-          <div>Losses: <strong>{stats.losses}</strong></div>
-          <div>Games Played: <strong>{stats.gamesPlayed}</strong></div>
-          <div>Streak: <strong>{stats.streak}</strong></div>
-          <div>Best: <strong>{stats.bestStreak}</strong></div>
-        </div>
-
-        {/* Mode Selector */}
-<div style={{ marginBottom: "1rem" }}>
-  <label>Mode: </label>
-  <select
-    value={mode}
-    onChange={(e) => {
-      const newMode = e.target.value as Mode;
-      setMode(newMode);
-
-      setTimeout(() => {
-        newRound(difficulty);
-      }, 0);
-    }}
-    style={{
-      padding: "0.4rem",
-      borderRadius: "6px",
-      marginLeft: "0.5rem",
-    }}
-  >
-    <option value="normal">Normal</option>
-    <option value="timed">Timed (30s)</option>
-  </select>
-</div>
-
-        {/* Difficulty */}
-        <div style={{ marginBottom: "1rem" }}>
-          <label>Difficulty: </label>
-          <select
-            value={difficulty}
-            onChange={(e) => {
-              const level = e.target.value as Difficulty;
-              setDifficulty(level);
-              newRound(level);
-            }}
->>>>>>> bb545a9 (Added Local Storage for stats to hangman and scramble)
             style={{
               background: "#1e293b",
               padding: "2rem",
