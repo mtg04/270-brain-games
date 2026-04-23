@@ -176,10 +176,6 @@ export default function Scramble() {
   const [difficulty, setDifficulty] = useState<Difficulty>("easy");
   const [mode, setMode] = useState<Mode>("normal");
 
-  const [score, setScore] = useState(0);
-  const [streak, setStreak] = useState(0);
-  const [bestStreak, setBestStreak] = useState(0);
-
   const [timeLeft, setTimeLeft] = useState(30);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -248,7 +244,10 @@ export default function Scramble() {
     if (timeLeft > 0) return;
 
     setMessage("Time's up!");
-    setStreak(0);
+    setStats((prev) => ({
+      ...prev,
+      streak: 0,
+    }));
 
     if (timerRef.current) {
       clearInterval(timerRef.current);
@@ -314,7 +313,11 @@ export default function Scramble() {
     // If all revealed → auto win
     if (newRevealed.every(Boolean)) {
       setMessage("Auto-solved :(");
-      setScore((s) => s + 1);
+      setStats((prev) => ({
+        ...prev,
+        wins: prev.wins + 1,
+        gamesPlayed: prev.gamesPlayed + 1,
+      }));
 
       setTimeout(() => newRound(), 700);
     }
@@ -368,13 +371,13 @@ export default function Scramble() {
             {/* Stats */}
             <div style={{ marginBottom: "1rem" }}>
               <div>
-                Score: <strong>{score}</strong>
+                Score: <strong>{stats.wins}</strong>
               </div>
               <div>
-                Streak: <strong>{streak}</strong>
+                Streak: <strong>{stats.streak}</strong>
               </div>
               <div>
-                Best: <strong>{bestStreak}</strong>
+                Best: <strong>{stats.bestStreak}</strong>
               </div>
             </div>
 
