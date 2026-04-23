@@ -9,12 +9,12 @@ const games = [
   },
   {
     name: "Hangman",
-    description: "Guess the word before you run out of tries.",
+    description: "Guess the word to save the man!",
     route: "/games/hangman",
   },
   {
     name: "Wordle",
-    description: "Guess the word in 6 attempts.",
+    description: "Guess the 5 letter word in 6 attempts.",
     route: "/games/wordle",
   },
 ];
