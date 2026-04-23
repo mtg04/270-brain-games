@@ -313,11 +313,17 @@ export default function Scramble() {
     // If all revealed → auto win
     if (newRevealed.every(Boolean)) {
       setMessage("Auto-solved :(");
-      setStats((prev) => ({
-        ...prev,
-        wins: prev.wins + 1,
-        gamesPlayed: prev.gamesPlayed + 1,
-      }));
+      setStats((prev) => {
+        const newStreak = prev.streak + 1;
+
+        return {
+          ...prev,
+          wins: prev.wins + 1,
+          gamesPlayed: prev.gamesPlayed + 1,
+          streak: newStreak,
+          bestStreak: Math.max(prev.bestStreak, newStreak),
+        };
+    });
 
       setTimeout(() => newRound(), 700);
     }
@@ -369,15 +375,21 @@ export default function Scramble() {
             </h1>
 
             {/* Stats */}
-            <div style={{ marginBottom: "1rem" }}>
+            <div style={{ marginBottom: "1rem" }} suppressHydrationWarning>
               <div>
-                Score: <strong>{stats.wins}</strong>
+                Wins: <strong suppressHydrationWarning>{stats.wins}</strong>
               </div>
               <div>
-                Streak: <strong>{stats.streak}</strong>
+                Losses: <strong suppressHydrationWarning>{stats.losses}</strong>
               </div>
               <div>
-                Best: <strong>{stats.bestStreak}</strong>
+                Games Played: <strong suppressHydrationWarning  >{stats.gamesPlayed}</strong>
+              </div>
+              <div>
+                Streak: <strong suppressHydrationWarning>{stats.streak}</strong>
+              </div>
+              <div>
+                Best: <strong suppressHydrationWarning >{stats.bestStreak}</strong>
               </div>
             </div>
 
