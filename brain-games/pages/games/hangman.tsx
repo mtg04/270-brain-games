@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import Sidebar from "@/components/Sidebar";
+import  Sidebar  from "@/components/Sidebar";
+import { useLocalStorage } from "@/components/useLocalStorage";
 import words from "an-array-of-english-words";
 
 const wordList: string[] = words;
@@ -27,6 +28,24 @@ export default function App() {
 	"/hangman6.png",
 	"/hangman7.png",
     ];
+
+    type HangmanStats = {
+        wins: number;
+        losses: number;
+        gamesPlayed: number;
+        streak: number;
+        bestStreak: number;
+    };
+
+    const [stats, setStats] = useLocalStorage<HangmanStats>("hangmanStats", {
+        wins: 0,
+        losses: 0,
+        gamesPlayed: 0,
+        streak: 0,
+        bestStreak: 0,
+    });
+
+    const [resultRecorded, setResultRecorded] = useState<boolean>(false);
 
     useEffect(() => {
         setWord(chooseWord(wordList));
@@ -257,7 +276,12 @@ export default function App() {
                             {gameOver && wrongGuesses < MAX_WRONG && <p style={{ color: "#22c55e" }}>You win!</p>}
                             {gameOver && wrongGuesses >= MAX_WRONG && <p style={{ color: "#ef4444" }}>You lose! Word was {word}</p>}
                         </div>
-
+                        <div style={{ marginTop: "20px" }}>
+                            <p>Wins: {stats.wins}</p>
+                            <p>Losses: {stats.losses}</p>
+                            <p>Streak: {stats.streak}</p>
+                            <p>Best Streak: {stats.bestStreak}</p>
+</div>
                     </div>
                 </div>
             </div>
