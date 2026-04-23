@@ -22,8 +22,8 @@ const games = [
 export default function Home() {
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Brain Games</h1>
-      <p className={styles.subtitle}>Choose a game and test your brain</p>
+      <h1 className={styles.title}>Bouchard's Brain Games</h1>
+      <p className={styles.subtitle}>Choose a game and test your brain!</p>
 
       <div className={styles.menu}>
         {games.map((game) => (

@@ -6,19 +6,19 @@ const games = [
   {
     name: "Word Scramble",
     route: "/games/scramble",
-    icon: "/public/UI/Sidebar/scramble.png"
+    icon: "/UI/Sidebar/scramble_logo.png"
   },
 
   {
     name: "Hangman",
     route: "/games/hangman",
-    icon: "/public/UI/Sidebar/hangman.png"
+    icon: "/UI/Sidebar/hangman_logo.png"
   },
 
   {
     name: "Wordle",
     route: "/games/wordle",
-    icon: "/public/UI/Sidebar/wordle.png"
+    icon: "/UI/Sidebar/wordle_logo.png"
   },
 ];
 
