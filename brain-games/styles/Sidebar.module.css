@@ -1,0 +1,24 @@
+.sidebar {
+  width: 200px;
+  height: 100vh;
+  background-color: #111;
+  color: white;
+  padding: 20px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 99;
+}
+
+.title {
+  margin-bottom: 20px;
+}
+
+.link {
+  margin: 10px 0;
+  cursor: pointer;
+}
+
+.link:hover {
+  text-decoration: underline;
+}

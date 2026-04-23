@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
+import Sidebar from "@/components/Sidebar";
 import words from "an-array-of-english-words";
 
 const wordList: string[] = words;
-const MAX_WRONG = 6;
+const MAX_WRONG = 7;
 
 function chooseWord(list: string[]): string {
     const index = Math.floor(Math.random() * list.length);
@@ -17,6 +18,7 @@ export default function App() {
     const [input, setInput] = useState<string>("");
     const [gameOver, setGameOver] = useState<boolean>(false);
     const hangmanImages = [
+	"/hangman0.png",
 	"/hangman1.png",
 	"/hangman2.png",
 	"/hangman3.png",
@@ -24,7 +26,6 @@ export default function App() {
 	"/hangman5.png",
 	"/hangman6.png",
 	"/hangman7.png",
-	"/hangman8.png"
     ];
 
     useEffect(() => {
@@ -113,51 +114,71 @@ export default function App() {
     };
 
     const cardStyle = {
+	position: "fixed",
+	top: "75%",
+	left: "50%",
         background: "#1e293b",
         padding: "2rem",
         borderRadius: "16px",
-        width: "400px",
+        width: "40vw",
+	height: "12vw",
         textAlign: "center",
-        boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
-        marginTop: "800px"
+	zIndex: 2
     };
 
     /* ---------------- UI ---------------- */
 
     return (
+	<div style={{ display: "flex" }}>
+        <Sidebar />
         <div style={containerStyle}>
 
             {/* TOP TITLE */}
             <h1 style={{
                 textAlign: "center",
                 paddingTop: "20px",
-                fontSize: "2.5rem"
+                fontSize: "2.5vw"
             }}>
                 Hangman
             </h1>
 
 	    <img
-		src="/chalkboard.png"
-		alt="chalkboard"
-		style={{
-		    position: "absolute",
-		    top: "120px",
-		    left: "50%",
-		    transform: "translateX(-50%)",
-		    width: "500px",
-		    height: "auto",
-		    zIndex: 1
-		}}
+		src="/classroom_wall.jpg"
+		     alt="chalkboard"
+		     style={{
+			 position: "absolute",
+			 top: "0",
+			 left: "50%",
+			 transform: "translateX(-50%)",
+			 width: "75vw",
+			 height: "50vw",
+			 objectFit: "contain",
+			 zIndex: 1
+		     }}
 	    />
 
-            {/* RIGHT LETTER BANK */}
+	    <img
+		src={hangmanImages[wrongGuesses]}
+		    style={{
+			position: "absolute",
+			top: "50%",
+			left: "50%",
+			transform: "translate(-50%, -50%)",
+			width: "40vw",
+			maxWidth: "600px",
+			height: "auto",
+			zIndex: 2
+		    }}
+	    />
+
+            {/* LETTER BANK */}
             <div style={{
                 position: "absolute",
-                right: "20px",
+                right: "2vw",
                 top: "50%",
                 transform: "translateY(-50%)"
             }}>
-                <strong>Wrong</strong>
+                <strong>Wrong Letters</strong>
                 <div>{wrongLetters.join(", ")}</div>
             </div>
 
@@ -241,5 +262,7 @@ export default function App() {
                 </div>
             </div>
         </div>
+	</div>
+	
     );
 }
