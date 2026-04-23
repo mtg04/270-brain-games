@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Link from "next/link";
 import styles from "@/styles/Sidebar.module.css";
 
@@ -9,13 +10,25 @@ const games = [
 ];
 
 export default function Sidebar() {
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
-    <div className={styles.sidebar}>
-      <h2 className={styles.title}>Games</h2>
+    <div className={`${styles.sidebar} ${collapsed ? styles.collapsed : ""}`}>
+      <button
+        className={styles.toggle}
+        onClick={() => setCollapsed(!collapsed)}
+      >
+        {collapsed ? "→" : "←"}
+      </button>
+
+      {!collapsed && <h2 className={styles.title}>Games</h2>}
+
       <nav>
         {games.map((game) => (
           <Link key={game.name} href={game.route}>
-            <div className={styles.link}>{game.name}</div>
+            <div className={styles.link}>
+              {collapsed ? game.name[0] : game.name}
+            </div>
           </Link>
         ))}
       </nav>
