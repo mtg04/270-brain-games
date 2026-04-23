@@ -126,23 +126,23 @@ export default function App() {
 
     const containerStyle = {
         minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
         background: "#0f172a",
         color: "#f1f5f9",
         fontFamily: "sans-serif",
-        position: "relative"
+        padding: "2rem",
+        width: "100%",
     };
 
     const cardStyle = {
-	position: "fixed",
-	top: "75%",
-	left: "50%",
         background: "#1e293b",
         padding: "2rem",
         borderRadius: "16px",
-        width: "40vw",
-	height: "12vw",
-        textAlign: "center",
-	zIndex: 2
+        width: "500px",
+        textAlign: "center" as const,
+        boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
     };
 
     /* ---------------- UI ---------------- */
@@ -150,143 +150,110 @@ export default function App() {
     return (
 	<div style={{ display: "flex" }}>
         <Sidebar />
-        <div style={containerStyle}>
 
-            {/* TOP TITLE */}
+        <div style={containerStyle}>
+            <div style={cardStyle}>
+                {/* TOP TITLE */}
             <h1 style={{
-                textAlign: "center",
-                paddingTop: "20px",
-                fontSize: "2.5vw"
-            }}>
+                fontSize: "2rem",
+                marginBottom: "1rem"
+                }}>
                 Hangman
             </h1>
 
-	    <img
-		src="/classroom_wall.jpg"
-		     alt="chalkboard"
-		     style={{
-			 position: "absolute",
-			 top: "0",
-			 left: "50%",
-			 transform: "translateX(-50%)",
-			 width: "75vw",
-			 height: "50vw",
-			 objectFit: "contain",
-			 zIndex: 1
-		     }}
-	    />
-
-	    <img
-		src={hangmanImages[wrongGuesses]}
-		    style={{
-			position: "absolute",
-			top: "50%",
-			left: "50%",
-			transform: "translate(-50%, -50%)",
-			width: "40vw",
-			maxWidth: "600px",
-			height: "auto",
-			zIndex: 2
-		    }}
-	    />
-
-            {/* LETTER BANK */}
-            <div style={{
-                position: "absolute",
-                right: "2vw",
-                top: "50%",
-                transform: "translateY(-50%)"
-            }}>
-                <strong>Wrong Letters</strong>
-                <div>{wrongLetters.join(", ")}</div>
+            <div style={{ marginTop: "20px" }}>
+                <p>Wins: {stats.wins}</p>
+                <p>Losses: {stats.losses}</p>
+                <p>Streak: {stats.streak}</p>
+                <p>Best Streak: {stats.bestStreak}</p>
             </div>
 
-            {/* CENTER CONTENT */}
-            <div style={{ display: "flex", justifyContent: "center" }}>
-                <div>
+	        <img
+                src={hangmanImages[wrongGuesses]}
+                alt="Hangman"
+                style={{
+                    width: "220px",
+                    maxWidth: "100%",
+                    marginBottom: "1rem",
+                }}
+            />
 
-                    {/* CARD */}
-                    <div style={cardStyle}>
+            {/* LETTER BANK */}
+            <div style={{ marginBottom: "1rem" }}>
+                <strong>Wrong Letters:</strong>
+                <div>{wrongLetters.join(", ") || "None"}</div>
+            </div>
+	
+            {/* WORD */}
+            <h2 style={{
+                letterSpacing: "8px",
+                fontSize: "2rem",
+                margin: "1.5rem 0",
+                background: "#0f172a",
+                padding: "1rem",
+                borderRadius: "10px",
+            }}>
+                {getWordDisplay()}
+            </h2>
 
-                        {/* WORD */}
-                        <h2 style={{
-                            letterSpacing: "8px",
-                            fontSize: "2rem",
-                            margin: "1.5rem 0",
-                            background: "#0f172a",
-                            padding: "1rem",
-                            borderRadius: "10px",
-                        }}>
-                            {getWordDisplay()}
-                        </h2>
+            {/* INPUT */}
+            <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter") handleSubmit();
+                }}
+                placeholder="Enter a letter"
+                style={{
+                    padding: "0.6rem",
+                    width: "80%",
+                    borderRadius: "8px",
+                    border: "none",
+                    outline: "none",
+                    textAlign: "center",
+                    fontSize: "1rem",
+                }}
+            />
 
-                        {/* INPUT */}
-                        <input
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.key === "Enter") handleSubmit();
-                            }}
-                            placeholder="Enter a letter"
-                            style={{
-                                padding: "0.6rem",
-                                width: "80%",
-                                borderRadius: "8px",
-                                border: "none",
-                                outline: "none",
-                                textAlign: "center",
-                                fontSize: "1rem",
-                            }}
-                        />
+                {/* BUTTONS */}
+                <div style={{ marginTop: "1rem" }}>
+                    <button
+                        onClick={handleSubmit}
+                        style={{
+                            padding: "0.6rem 1.2rem",
+                            marginRight: "0.5rem",
+                            borderRadius: "8px",
+                            border: "none",
+                            background: "#22c55e",
+                            color: "white",
+                            cursor: "pointer",
+                        }}
+                    >
+                        Guess
+                    </button>
 
-                        {/* BUTTONS */}
-                        <div style={{ marginTop: "1rem" }}>
-                            <button
-                                onClick={handleSubmit}
-                                style={{
-                                    padding: "0.6rem 1.2rem",
-                                    marginRight: "0.5rem",
-                                    borderRadius: "8px",
-                                    border: "none",
-                                    background: "#22c55e",
-                                    color: "white",
-                                    cursor: "pointer",
-                                }}
-                            >
-                                Guess
-                            </button>
+                    <button
+                        onClick={newRound}
+                        style={{
+                            padding: "0.6rem 1.2rem",
+                            borderRadius: "8px",
+                            border: "none",
+                            background: "#ef4444",
+                            color: "white",
+                            cursor: "pointer",
+                        }}
+                    >
+                        New Word
+                    </button>
+                </div>
 
-                            <button
-                                onClick={newRound}
-                                style={{
-                                    padding: "0.6rem 1.2rem",
-                                    borderRadius: "8px",
-                                    border: "none",
-                                    background: "#ef4444",
-                                    color: "white",
-                                    cursor: "pointer",
-                                }}
-                            >
-                                New Word
-                            </button>
-                        </div>
-
-                        {/* GAME STATE */}
-                        <div style={{ marginTop: "1rem" }}>
-                            {gameOver && wrongGuesses < MAX_WRONG && <p style={{ color: "#22c55e" }}>You win!</p>}
-                            {gameOver && wrongGuesses >= MAX_WRONG && <p style={{ color: "#ef4444" }}>You lose! Word was {word}</p>}
-                        </div>
-                        <div style={{ marginTop: "20px" }}>
-                            <p>Wins: {stats.wins}</p>
-                            <p>Losses: {stats.losses}</p>
-                            <p>Streak: {stats.streak}</p>
-                            <p>Best Streak: {stats.bestStreak}</p>
-</div>
-                    </div>
+                {/* GAME STATE */}
+                <div style={{ marginTop: "1rem" }}>
+                    {gameOver && wrongGuesses < MAX_WRONG && <p style={{ color: "#22c55e" }}>You win!</p>}
+                    {gameOver && wrongGuesses >= MAX_WRONG && <p style={{ color: "#ef4444" }}>You lose! Word was {word}</p>}
                 </div>
             </div>
         </div>
 	</div>
-	
     );
 }
